@@ -61,7 +61,7 @@ CREATE TABLE Doctors (
 	AvailabilityStatus VARCHAR(20) NOT NULL,
     EmploymentDate DATE NOT NULL DEFAULT GETDATE(),
     TerminationDate DATE,
-	CONSTRAINT CHK_DoctorEmailAddress CHECK (EmailAddress LIKE '%@%._%'),
+	CONSTRAINT CHK_DoctorEmailAddress CHECK (EmailAddress LIKEÂ '%@%._%'),
     FOREIGN KEY (DepartmentID) REFERENCES Departments (DepartmentID),
 	CONSTRAINT CHK_DoctorGender CHECK (Gender IN ('M', 'F')), -- Gender should be 'M' or 'F'
 	CONSTRAINT CHK_DoctorDateOfBirth CHECK (DateOfBirth <= GETDATE()), -- Date of birth should not be in the future
