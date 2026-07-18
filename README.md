@@ -1,32 +1,48 @@
-# ElyonHospitals-Database-System
+# ElyonHospitals Database System
 
-This repository contains SQL scripts to create and populate the ElyonHospitals database.
+A hospital management database in T-SQL: schema design, security-conscious data handling,
+stored procedures, triggers, functions and reporting queries. Originally built as MSc
+coursework; since revisited to fix bugs and add showcase queries (see `CHANGES.md`).
 
-## Directory Structure
+## What's demonstrated
 
-- `tables/`: Contains SQL scripts to create database tables.
-- `inserts/`: Contains SQL scripts to insert data into the database tables.
+- **Schema design**: 15 tables covering patients, doctors, departments, appointments,
+  diagnoses, prescriptions and allergies, with a composite-key junction table
+  (`PatientsAllergies`) and a live/archive split for appointments.
+- **Data integrity**: CHECK constraints (dates of birth, gender codes, email patterns,
+  rating bounds), UNIQUE constraints, and foreign keys throughout.
+- **Security thinking**: credentials held in separate tables; insurance numbers, licence
+  numbers and passwords stored as SHA2-256 hashes, never plain text.
+- **Stored procedures**: appointment scheduling and cancellation with transactions and
+  TRY/CATCH error handling; a partial-update procedure using the ISNULL pattern;
+  multi-table insert with SCOPE_IDENTITY().
+- **Triggers**: a scoped AFTER UPDATE trigger that archives completed and cancelled
+  appointments automatically.
+- **Views and functions**: a UNION view across live and archived appointments;
+  scalar functions for doctor ratings and department appointment counts.
+- **Reporting**: `queries.sql` — six management questions answered with joins, window
+  functions, CTEs, STRING_AGG and conditional aggregation.
 
-## Tables
+## Files
 
-- Departments
-- Medicines
-- Patients
-- Doctors
-- PatientsCredentials
-- DoctorCredentials
-- PatientsAddressDetails
-- DoctorsAddressDetails
-- Appointments
-- Reviews
-- Diagnoses
-- Prescriptions
-- Allergies
-- PatientsAllergies
-- AppointmentsArchive
+| File | Purpose |
+|---|---|
+| `ElyonHospital Database System.sql` | Original schema, seed data and routines |
+| `fixes.sql` | Bug fixes and improvements (run after the original) |
+| `queries.sql` | Showcase reporting queries |
+| `CHANGES.md` | What was fixed and why |
 
-## How to Use
+## How to run
 
-1. Create the `ElyonHospitals` database.
-2. Execute the scripts in the `tables/` directory to create the tables.
-3. Execute the scripts in the `inserts/` directory to insert initial data.
+1. Open SQL Server Management Studio (or Azure Data Studio).
+2. Run `ElyonHospital Database System.sql` to create and populate the database.
+3. Run `fixes.sql` to apply the corrections.
+4. Explore with `queries.sql`.
+
+## Honest limitations
+
+- Password hashing uses unsalted SHA2-256 — fine for a coursework demo, but a real
+  system would use a salted, slow algorithm (bcrypt/Argon2) via the application layer.
+- Seed data is small and synthetic; some names/usernames are intentionally imperfect.
+- No indexing strategy beyond primary keys — a production system would index the
+  common join and filter columns.
