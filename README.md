@@ -20,24 +20,49 @@ coursework; since revisited to fix bugs and add showcase queries (see `CHANGES.m
   appointments automatically.
 - **Views and functions**: a UNION view across live and archived appointments;
   scalar functions for doctor ratings and department appointment counts.
-- **Reporting**: `queries.sql` — six management questions answered with joins, window
+- **Reporting**: `3_queries.sql` — six management questions answered with joins, window
   functions, CTEs, STRING_AGG and conditional aggregation.
 
-## Files
+## Entity-relationship diagram
+
+```mermaid
+erDiagram
+    Departments   ||--o{ Doctors : employs
+    Doctors       ||--|| DoctorCredentials : "has login"
+    Doctors       ||--|| DoctorsAddressDetails : "has address"
+    Patients      ||--|| PatientsCredentials : "has login"
+    Patients      ||--|| PatientsAddressDetails : "has address"
+    Patients      ||--o{ Appointments : books
+    Doctors       ||--o{ Appointments : attends
+    Appointments  ||--o| AppointmentsArchive : "archived to"
+    Patients      ||--o{ PatientsAllergies : has
+    Allergies     ||--o{ PatientsAllergies : "listed in"
+    AppointmentsArchive ||--o{ Diagnoses : "results in"
+    Patients      ||--o{ Diagnoses : receives
+    Doctors       ||--o{ Diagnoses : makes
+    Diagnoses     ||--o{ Prescriptions : "leads to"
+    Medicines     ||--o{ Prescriptions : "prescribed as"
+    Patients      ||--o{ Prescriptions : receives
+    AppointmentsArchive ||--o{ Reviews : "reviewed in"
+    Patients      ||--o{ Reviews : writes
+    Doctors       ||--o{ Reviews : "rated in"
+```
+
+## Files (run in order)
 
 | File | Purpose |
 |---|---|
-| `ElyonHospital Database System.sql` | Original schema, seed data and routines |
-| `fixes.sql` | Bug fixes and improvements (run after the original) |
-| `queries.sql` | Showcase reporting queries |
+| `1_schema_procedures_data.sql` | Schema, seed data, procedures, triggers, views, functions |
+| `2_fixes.sql` | Bug fixes and improvements (run after step 1) |
+| `3_queries.sql` | Showcase reporting queries |
 | `CHANGES.md` | What was fixed and why |
 
 ## How to run
 
 1. Open SQL Server Management Studio (or Azure Data Studio).
-2. Run `ElyonHospital Database System.sql` to create and populate the database.
-3. Run `fixes.sql` to apply the corrections.
-4. Explore with `queries.sql`.
+2. Run `1_schema_procedures_data.sql` to create and populate the database.
+3. Run `2_fixes.sql` to apply the corrections.
+4. Explore with `3_queries.sql`.
 
 ## Honest limitations
 
